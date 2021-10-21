@@ -1,0 +1,93 @@
+var bg,bgImg;
+var spaceShip,spaceShipImg,spaceShipImg2,spaceShipImg3,spaceShipImg4;
+var astroids,astroidsImg;
+var star,starImg,earth,earthImg
+var missle;
+var astroidsGroup;
+
+
+function preload(){
+    bgImg=loadImage("assets/bg.jpg");
+    spaceShipImg=loadImage("assets/spacecraft1.png");
+    spaceShipImg2=loadImage("assets/spacecraft2.png");
+    spaceShipImg3=loadImage("assets/spacecraft3.png");
+    spaceShipImg4=loadImage("assets/spacecraft4.png");
+    astroidsImg=loadImage("assets/astroids.png");
+    starImg=loadImage("assets/star.png");
+    earthImg=loadImage("assets/earth2.png");
+    
+}
+
+function setup(){
+    createCanvas(windowWidth,windowHeight);
+    
+    bg=createSprite(displayHeight/2+400,displayWidth/2-300,50,50);
+    bg.addImage(bgImg);
+    bg.scale=4;
+
+    spaceShip=createSprite(700,500,100,100);
+    spaceShip.addImage(spaceShipImg);
+    spaceShip.scale=0.2;
+    spaceShip.debug=true;
+    spaceShip.setCollider("rectangle",0,-100,500,500);
+
+    earth=createSprite(displayHeight/2+400,displayWidth/2+200,50,50);
+    earth.addImage(earthImg);
+    earth.scale=0.5;
+ 
+    astroidsGroup=new Group();
+
+}
+
+function draw(){
+    background(2);
+
+
+    if(keyWentDown("RIGHT_ARROW")){
+        spaceShip.velocityX=8;
+        spaceShip.addImage(spaceShipImg3);
+    }
+    if(keyWentUp("RIGHT_ARROW")){
+        spaceShip.velocityX=0;
+        spaceShip.addImage(spaceShipImg);
+    }
+
+    if(keyWentDown("LEFT_ARROW")){
+        spaceShip.velocityX=-8;
+        spaceShip.addImage(spaceShipImg4);
+    }
+    if(keyWentUp("LEFT_ARROW")){
+        spaceShip.velocityX=0;
+        spaceShip.addImage(spaceShipImg);
+    }
+
+
+    if(spaceShip.isTouching(astroidsGroup))
+    {
+        for(var i=0;i<astroidsGroup.length;i++)
+        {
+          if(astroidsGroup[i].isTouching(spaceShip))
+          {
+              astroidsGroup[i].destroy();
+          }
+        }
+    }
+
+
+    enemy();
+    drawSprites();
+}
+
+function enemy(){
+    if(frameCount%60===0){
+    astroids=createSprite(random(400,1200),0,50,50);
+    astroids.velocityY=5;
+    astroids.addImage(astroidsImg);
+    astroids.scale=0.5;
+    astroids.lifeTime=1200;
+    astroidsGroup.add(astroids);
+    astroids.debug=true;
+    astroids.depth=spaceShip.depth;
+    astroids.depth=astroids.depth-1;
+  } 
+}
